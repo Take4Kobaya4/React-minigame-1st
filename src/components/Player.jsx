@@ -1,15 +1,23 @@
 import { useState } from "react";
 
-export default function Player ({name, symbol}){
+export default function Player ({initialName, symbol}){
+    const [playerName, setPlayerName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
-
+    // Edit押下後、setIsEditingがfalse→true
     function handleEditClick(){
-       setIsEditing(true);
+        setIsEditing((editing) => !editing);
     }
-
-    let playerName = <span className="player-name">{name}</span>;
+    function handleChange(event){
+        setPlayerName(event.target.value);
+    }
+    // 変数playerName
+    let editablePlayerName = <span className="player-name">{playerName}</span>;
+    // ボタンのデフォルト：editに
+    // let btnCaption = 'Edit';
+    // isEditingが存在しているとき、inputタグで編集、ボタンを保存へ変更
     if(isEditing){
-        playerName = <input type="text" required/>;
+        editablePlayerName = <input type="text" required defaultValue={playerName} onChange={handleChange}/>;
+        // btnCaption = 'Save';
     }
     return (
         <li>
@@ -17,7 +25,7 @@ export default function Player ({name, symbol}){
                 {playerName}
                 <span className="player-symbol">{symbol}</span>
             </span>
-            <button onClick={handleEditClick}>Edit</button>
+            <button onClick={handleEditClick}>{isEditing ? 'Save' : 'Edit'}</button>
         </li>
     );
 }
